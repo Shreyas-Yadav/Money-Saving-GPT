@@ -13,7 +13,7 @@
 <body>
     <div class="container-fluid chat-container">
         <div class="row h-100">
-            <div class="col-md-2 sidebar">
+            <div class="col-md-3 sidebar">
                 <div class="model-selection">
                     <h4 class="mb-4">AI Models</h4>
                     <div class="list-group" id="model-list">
@@ -29,13 +29,23 @@
                     </div>
                 </div>
                 <div class="history-section mt-4">
-                    <h4 class="mb-4">History</h4>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">History</h4>
+                        <div>
+                            <button id="refresh-history-btn" class="btn btn-sm btn-outline-light mr-1" title="Refresh History">
+                                <i class="fas fa-sync"></i>
+                            </button>
+                            <button id="clear-history-btn" class="btn btn-sm btn-outline-danger" title="Clear All History">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
                     <div class="list-group" id="history-list">
                         <!-- Session IDs will be dynamically added here -->
                     </div>
                 </div>
             </div>
-            <div class="col-md-10 chat-interface d-flex flex-column">
+            <div class="col-md-9 chat-interface d-flex flex-column">
                 <div class="card flex-grow-1">
                     <div class="card-header">
                         <h5 class="mb-0">Backup Brain</h5>

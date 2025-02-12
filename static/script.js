@@ -7,6 +7,8 @@ const messageInput = document.getElementById('message-input');
 const sendBtn = document.getElementById('send-btn');
 const connectionStatus = document.getElementById('connection-status');
 const modelList = document.getElementById('model-list');
+const refreshHistoryBtn = document.getElementById('refresh-history-btn');
+const clearHistoryBtn = document.getElementById('clear-history-btn');
 let socket = null;
 let totalCost = 0;
 
@@ -149,6 +151,25 @@ messageInput.addEventListener('keypress', (e) => {
     }
 });
 
+// Function to delete a specific session's history
+async function deleteHistoryBySessionId(sessionId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/delete_history/${sessionId}`, {
+            method: 'DELETE'
+        });
+        
+        if (response.ok) {
+            await fetchHistory(); // Refresh history list
+            alert(`History for session ${sessionId} has been deleted successfully.`);
+        } else {
+            alert('Failed to delete session history.');
+        }
+    } catch (error) {
+        console.error('Error deleting session history:', error);
+        alert('An error occurred while deleting session history.');
+    }
+}
+
 // Function to fetch and display history
 async function fetchHistory() {
     try {
@@ -158,16 +179,56 @@ async function fetchHistory() {
         
         historyList.innerHTML = ''; // Clear existing history
         data.forEach(session => {
-            const sessionItem = document.createElement('a');
-            sessionItem.href = `${API_BASE_URL}/history/${session.session_id}`;
-            sessionItem.className = 'list-group-item';
-            sessionItem.textContent = session.session_id;
+            const sessionItem = document.createElement('div');
+            sessionItem.className = 'd-flex align-items-center list-group-item';
+            
+            // Create session link
+            const sessionLink = document.createElement('a');
+            sessionLink.href = `${API_BASE_URL}/history/${session.session_id}`;
+            sessionLink.textContent = session.session_id;
+            sessionLink.className = 'flex-grow-1 mr-2';
+            
+            // Create delete button
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'btn btn-sm btn-outline-danger';
+            deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+            deleteBtn.title = 'Delete Session History';
+            deleteBtn.addEventListener('click', () => deleteHistoryBySessionId(session.session_id));
+            
+            // Append link and delete button to session item
+            sessionItem.appendChild(sessionLink);
+            sessionItem.appendChild(deleteBtn);
+            
             historyList.appendChild(sessionItem);
         });
     } catch (error) {
         console.error('Error fetching history:', error);
     }
 }
+
+// Function to clear all history
+async function clearAllHistory() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/delete_all_history`, {
+            method: 'DELETE'
+        });
+        if (response.ok) {
+            await fetchHistory(); // Refresh history list
+            alert('All history has been cleared successfully.');
+        } else {
+            alert('Failed to clear history.');
+        }
+    } catch (error) {
+        console.error('Error clearing history:', error);
+        alert('An error occurred while clearing history.');
+    }
+}
+
+// Event listener for clear history button
+clearHistoryBtn.addEventListener('click', clearAllHistory);
+
+// Event listener for refresh history button
+refreshHistoryBtn.addEventListener('click', fetchHistory);
 
 // Event listener for the "Start New Session" button in the modal
 document.getElementById('startNewSessionBtn').addEventListener('click', () => {

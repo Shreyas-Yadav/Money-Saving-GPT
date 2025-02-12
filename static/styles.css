@@ -221,7 +221,6 @@ body, html {
     }
 }
 
-
 /* Add cost badge styling */
 .cost-badge {
     font-size: 0.8em;
@@ -232,7 +231,6 @@ body, html {
     margin: 5px 0 15px;
     width: fit-content;
 }
-
 
 /* Add these styles */
 .total-cost-container {
@@ -255,7 +253,6 @@ body, html {
     font-family: 'Fira Code', monospace;
 }
 
-
 .message.system {
     background-color: #fff3cd;
     border-color: #ffeeba;
@@ -263,4 +260,44 @@ body, html {
 
 .message.system .message-content {
     color: #856404;
+}
+
+/* History Section Styles */
+.history-section .list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: transparent;
+    color: rgba(255,255,255,0.8);
+    border: 2px solid transparent;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    padding: 12px 15px;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.history-section .list-group-item a {
+    text-decoration: none;
+    color: rgba(255,255,255,0.8);
+    transition: color 0.3s ease;
+    flex-grow: 1;
+    margin-right: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.history-section .list-group-item a:hover {
+    color: white;
+}
+
+.history-section .list-group-item .btn-outline-danger {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.history-section .list-group-item:hover .btn-outline-danger {
+    opacity: 1;
+    visibility: visible;
 }

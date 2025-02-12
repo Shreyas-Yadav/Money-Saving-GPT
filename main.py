@@ -118,6 +118,26 @@ async def get_history():
         # logger.error(f"Error fetching history: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.delete("/delete_all_history")
+async def delete_all_history():
+    try:
+        # Delete all documents in the chat_logs collection
+        await chat_logs.delete_many({})
+        return {"status": "All history deleted successfully"}
+    except Exception as e:
+        # logger.error(f"Error deleting all history: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/delete_history/{session_id}")
+async def delete_history_by_session(session_id: str):
+    try:
+        # Delete all documents with the specified session_id
+        await chat_logs.delete_many({"session_id": session_id})
+        return {"status": f"History for session {session_id} deleted successfully"}
+    except Exception as e:
+        # logger.error(f"Error deleting history for session {session_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.get("/get_chat_history/{session_id}")
 async def get_chat_history(session_id: str):
     try:
@@ -200,17 +220,17 @@ async def check_context_relevance(history: List[Dict], current_prompt: str) -> b
                  If the latest user message is related to the previous chat, respond with 'yes'.
                  If it is a completely different topic, respond with 'no'.
     
-Previous exchanges:
-    1. User: {user_messages[-3]}
-       AI: {ai_responses[-3]}
-    2. User: {user_messages[-2]}
-       AI: {ai_responses[-2]}
-    3. User: {user_messages[-1]}
-       AI: {ai_responses[-1]}
-    
-Current message: 
-    {current_prompt}
-    """
+    Previous exchanges:
+        1. User: {user_messages[-3]}
+           AI: {ai_responses[-3]}
+        2. User: {user_messages[-2]}
+           AI: {ai_responses[-2]}
+        3. User: {user_messages[-1]}
+           AI: {ai_responses[-1]}
+        
+    Current message: 
+        {current_prompt}
+        """
 
     print(prompt);
     
