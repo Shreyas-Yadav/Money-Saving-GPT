@@ -141,6 +141,45 @@ async def get_chat_history(session_id: str):
 async def serve_history(session_id: str):
     return FileResponse("static/history.html")
 
+@app.get("/generate_summary/{session_id}")
+async def generate_summary(session_id: str):
+    try:
+        # Fetch chat history for the session
+        history = await chat_logs.find({"session_id": session_id}).to_list(None)
+        
+        # Prepare messages for summary generation
+        messages = []
+        for msg in history:
+            if "user_message" in msg:
+                messages.append(f"User: {msg['user_message']}")
+            if "ai_response" in msg:
+                messages.append(f"AI: {msg['ai_response']}")
+        
+        # Prepare prompt for summary generation
+        summary_prompt = f"""Please generate a concise and informative summary of the following conversation. 
+        Highlight the key topics discussed, main points, and any significant insights or conclusions.
+
+        Conversation:
+        {chr(10).join(messages)}
+
+        Summary:"""
+        
+        # Generate summary using LiteLLM
+        response = litellm.completion(
+            model="openrouter/openai/gpt-4",
+            messages=[{"role": "user", "content": summary_prompt}],
+            temperature=0.3
+        )
+        
+        # Extract summary from the response
+        summary = response.choices[0].message.content
+        
+        return {"summary": summary}
+    
+    except Exception as e:
+        logger.error(f"Error generating summary: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 async def check_context_relevance(history: List[Dict], current_prompt: str) -> bool:
     print("Inside check_context_relevance");
     user_messages = []
