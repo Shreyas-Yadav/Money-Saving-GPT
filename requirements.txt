@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+litellm
+python-multipart
+websockets
+python-dotenv
+openai
