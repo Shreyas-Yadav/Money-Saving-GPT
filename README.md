@@ -1,5 +1,11 @@
 # LLM Backend with FastAPI and OpenRouter
 
+## Project Summary
+
+This project implements a real-time chat application using FastAPI for the backend and WebSocket for communication. It leverages the OpenRouter API to support multiple Large Language Models (LLMs) for generating responses. The application includes session management, environment-based configuration, and supports various LLMs such as `openai/gpt-3.5-turbo`, `anthropic/claude-2`, and `google/palm-2`.
+
+## Setup
+
 ## Setup
 
 1. Create a virtual environment:
